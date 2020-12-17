@@ -1,25 +1,11 @@
-# ShakeSearch
+# Hi
 
-Welcome to the Pulley Shakesearch Take-home Challenge! In this repository,
-you'll find a simple web app that allows a user to search for a text string in
-the complete works of Shakespeare.
+I saw one of your team post this challange on Reddit this morning. I took a few minutes to take a stab at it. There's lots more to do but I've got a full time job in DevOps at an automation startup so this is what I've got.
 
-You can see a live version of the app at
-https://pulley-shakesearch.herokuapp.com/. Try searching for "Hamlet" to display
-a set of results.
+I didn't touch the front end. Yes, my code could be cleanded up and there is an edge case I'd like to take care of but didn't get to it. Basically, the backend returns the line preceeding and following the line with the matching search term. If it matches the first or last line of the file, there could be a problem.
 
-In it's current state, however, the app is just a rough prototype. The search is
-case sensitive, the results are difficult to read, and the search is limited to
-exact matches.
+If I had more time, I would add a link to see more context of the searched term and a link to an online edition of the works using the refrence I supplied.
 
-## Your Mission
+You can see what the results look like in the ExampleResults.png
 
-Improve the search backend. Think about the problem from the user's perspective
-and prioritize your changes according to what you think is most useful.
-
-To submit your solution, fork this repository and send us a link to your fork
-after pushing your changes. The project includes a Heroku Procfile and, in its
-current state, can be deployed easily on Heroku's free tier.
-
-If you are stronger on the front-end, complete the react-prompt.md in this
-folder.
+Best regards

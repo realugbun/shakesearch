@@ -3,44 +3,82 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"index/suffixarray"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strings"
+)
+
+type (
+	// ShakespeareDataRec holds all lines of Shakespear's works
+	ShakespeareDataRec struct {
+		ShakespeareLine []ShakespeareLineRec `json:"data"`
+	}
+	// ShakespeareLineRec hold individual lines of Shakespear's works
+	ShakespeareLineRec struct {
+		Type         string      `json:"type,omitempty"`
+		LineID       int         `json:"line_id,omitempty"`
+		PlayName     string      `json:"play_name,omitempty"`
+		SpeechNumber interface{} `json:"speech_number,omitempty"`
+		LineNumber   string      `json:"line_number,omitempty"`
+		Speaker      string      `json:"speaker,omitempty"`
+		TextEntry    string      `json:"text_entry,omitempty"`
+	}
+)
+
+var (
+	data ShakespeareDataRec
+	err  error
 )
 
 func main() {
-	searcher := Searcher{}
-	err := searcher.Load("completeworks.txt")
+
+	// INITIALIZATION
+	// Init logs
+	lf, err := os.OpenFile("shakespeare.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
+		err = errors.New("Failed to open/create log file")
+		log.Println(err)
+	}
+	log.SetOutput(lf)
+	defer lf.Close()
+
+	// Get input from Database
+	b, err := ioutil.ReadFile("data.json")
+	if err != nil {
+		err = errors.New("Failed to open database file")
 		log.Fatal(err)
 	}
+
+	err = json.Unmarshal([]byte(b), &data)
+	if err != nil {
+		err = errors.New("Failed to unmarshal database")
+		log.Fatal(err)
+	}
+
+	log.Println("Database loaded succussfully")
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/search", handleSearch(searcher))
+	http.HandleFunc("/search", handleSearch(data))
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3001"
 	}
 
-	fmt.Printf("Listening on port %s...", port)
+	log.Printf("Listening on port %s...", port)
 	err = http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-type Searcher struct {
-	CompleteWorks string
-	SuffixArray   *suffixarray.Index
-}
-
-func handleSearch(searcher Searcher) func(w http.ResponseWriter, r *http.Request) {
+func handleSearch(data ShakespeareDataRec) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		query, ok := r.URL.Query()["q"]
 		if !ok || len(query[0]) < 1 {
@@ -48,7 +86,7 @@ func handleSearch(searcher Searcher) func(w http.ResponseWriter, r *http.Request
 			w.Write([]byte("missing search query in URL params"))
 			return
 		}
-		results := searcher.Search(query[0])
+		results := data.Search(query[0])
 		buf := &bytes.Buffer{}
 		enc := json.NewEncoder(buf)
 		err := enc.Encode(results)
@@ -62,21 +100,16 @@ func handleSearch(searcher Searcher) func(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (s *Searcher) Load(filename string) error {
-	dat, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return fmt.Errorf("Load: %w", err)
-	}
-	s.CompleteWorks = string(dat)
-	s.SuffixArray = suffixarray.New(dat)
-	return nil
-}
+// Search method for finding a string within the data
+func (s *ShakespeareDataRec) Search(query string) []string {
 
-func (s *Searcher) Search(query string) []string {
-	idxs := s.SuffixArray.Lookup([]byte(query), -1)
-	results := []string{}
-	for _, idx := range idxs {
-		results = append(results, s.CompleteWorks[idx-250:idx+250])
+	var results []string
+
+	for i := range s.ShakespeareLine {
+		if strings.Contains(s.ShakespeareLine[i].TextEntry, query) {
+			qureyString := strings.Replace(s.ShakespeareLine[i].TextEntry, query, fmt.Sprintf("<b>%v</b>", query), -1)
+			results = append(results, fmt.Sprintf("\"%v %v %v\" (%v %v)", s.ShakespeareLine[i-1].TextEntry, qureyString, s.ShakespeareLine[i+1].TextEntry, s.ShakespeareLine[i].PlayName, s.ShakespeareLine[i].LineNumber))
+		}
 	}
 	return results
 }
