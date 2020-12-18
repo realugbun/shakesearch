@@ -27,6 +27,16 @@ type (
 		Speaker      string      `json:"speaker,omitempty"`
 		TextEntry    string      `json:"text_entry,omitempty"`
 	}
+	// ResultRec hold the data from the database used to fill the template
+	ResultRec struct {
+		lineBefore string
+		hit        string
+		lineAfter  string
+		playName   string
+		lineNumber string
+		speaker    string
+		lineType   string
+	}
 )
 
 var (
@@ -61,6 +71,7 @@ func main() {
 
 	log.Println("Database loaded succussfully")
 
+	// Init http server
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
@@ -101,15 +112,49 @@ func handleSearch(data ShakespeareDataRec) func(w http.ResponseWriter, r *http.R
 }
 
 // Search method for finding a string within the data
-func (s *ShakespeareDataRec) Search(query string) []string {
+func (s *ShakespeareDataRec) Search(query string) string {
 
-	var results []string
+	var results string
 
 	for i := range s.ShakespeareLine {
-		if strings.Contains(s.ShakespeareLine[i].TextEntry, query) {
-			qureyString := strings.Replace(s.ShakespeareLine[i].TextEntry, query, fmt.Sprintf("<b>%v</b>", query), -1)
-			results = append(results, fmt.Sprintf("\"%v %v %v\" (%v %v)", s.ShakespeareLine[i-1].TextEntry, qureyString, s.ShakespeareLine[i+1].TextEntry, s.ShakespeareLine[i].PlayName, s.ShakespeareLine[i].LineNumber))
+		if strings.Contains(
+			strings.ToLower(s.ShakespeareLine[i].TextEntry),
+			strings.ToLower(query),
+		) {
+			hit := ResultRec{
+				lineBefore: s.ShakespeareLine[i-1].TextEntry,
+				hit:        strings.Replace(s.ShakespeareLine[i].TextEntry, query, fmt.Sprintf("<b>%v</b>", query), -1),
+				lineAfter:  s.ShakespeareLine[i+1].TextEntry,
+				playName:   s.ShakespeareLine[i].PlayName,
+				lineNumber: s.ShakespeareLine[i].LineNumber,
+				speaker:    s.ShakespeareLine[i].Speaker,
+				lineType:   s.ShakespeareLine[i].Type,
+			}
+			results += hit.FormatHTML(hit)
 		}
 	}
+
 	return results
+}
+
+// FormatHTML formats the data in the needed HTML
+func (r *ResultRec) FormatHTML(hit ResultRec) string {
+	text := fmt.Sprintf("%v %v %v", r.lineBefore, r.hit, r.lineAfter)
+	formatedResult := fmt.Sprintf(`<figure class="result">
+        <div class="result__content">
+            <div class="result__title">
+                <h2 class="result__heading">%v %v</h2>
+                <div class="result__tag result__tag--1">#%v</div>
+                <div class="result__tag result__tag--2">#%v</div>
+
+            </div>
+            <p class="result__description">%v</p>
+        </div>
+        <div class="result__work">
+        	%v
+        </div>
+	</figure>`, r.playName, r.lineNumber, r.lineType, r.speaker, text, r.playName)
+
+	return formatedResult
+
 }
