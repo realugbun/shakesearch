@@ -35,10 +35,11 @@ h3 {
 h1 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #fff;
   font-size: 240%;
   word-spacing: 4px;
+  color: #fff;
 }
+
 /* -----------------------------------------*/
 /*             BUTTONS AND FORMS  */
 /* -----------------------------------------*/
@@ -69,11 +70,6 @@ button {
   font-size: 100%;
 }
 
-.btn:hover,
-.btn:active,
-input[type=submit] {
-  background-color: #bd6315;
-}
 
 .btn-full:link,
 .btn-full:visited,
@@ -84,18 +80,19 @@ input[type=submit] {
   margin-right: 15px;
 }
 
-.btn-full:hover,
-.btn-full:active,
-input[type=submit]:hover,
-input[type=submit]:active {
-  background-color: #bd6315;
-  border: 1px solid #bd6315;
-  color: white;
+.btn-full:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,.3);
+}
+
+.btn-full:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .3);
 }
 
 input {
   font-size: 115%;
-  background-color: rgba(255, 255, 255, 0.906);
+  background-color: rgba(255, 255, 255, 0.85);
   border-radius: 5px;
   border: 1px;
   margin: 10px 5px 10px 0;
@@ -115,14 +112,56 @@ header {
   background-attachment: fixed;
 }
 
+.heading-primary {
+  animation-name: moveInLeft;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+}
+
+.heading-form {
+  animation-name: moveInRight;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+}
+
 .hero-text-box {
   position: absolute;
   width: 1140px;
   top: 30%;
   left: 50%;
   transform: translate(-50%, 50%);
+  backface-visibility: hidden;
 }
 
+@keyframes moveInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  80% {
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 100%;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes moveInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+
+  80% {
+    transform: translateX(-10px);
+  }
+
+  100% {
+    opacity: 100%;
+    transform: translateX(0px);
+  }
+}
 
 /* ----------------------------------------- */
 /* Results */
@@ -130,11 +169,24 @@ header {
 .results-section {
  margin-bottom: 0px;
  color: #444;
- padding: 50px;
+ padding: 0px;
  background: linear-gradient(to bottom right, #eeeeee, #e6f5ef);
  display: flex;
  align-items: center;
  justify-content: center;
+}
+
+.results-section .hidden {
+  padding: 0px;
+}
+
+.results-section h1 {
+  color: black;
+  margin: 20px 20px;
+}
+
+#results-header {
+  text-align: center;
 }
 
 .result {

@@ -43,6 +43,10 @@ type (
 		lineType   string
 		score      int
 	}
+	ResultsToFront struct {
+		HTML       string `json:HTML`
+		NumResults int    `json:numResults`
+	}
 )
 
 var (
@@ -103,10 +107,11 @@ func handleSearch(data ShakespeareDataRec) func(w http.ResponseWriter, r *http.R
 			w.Write([]byte("missing search query in URL params"))
 			return
 		}
-		results := data.Search(query[0])
+		resultsToFront := data.Search(query[0])
+		fmt.Println(resultsToFront)
 		buf := &bytes.Buffer{}
 		enc := json.NewEncoder(buf)
-		err := enc.Encode(results)
+		err := enc.Encode(resultsToFront)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("encoding failure"))
@@ -118,9 +123,13 @@ func handleSearch(data ShakespeareDataRec) func(w http.ResponseWriter, r *http.R
 }
 
 // Search main search function
-func (s *ShakespeareDataRec) Search(query string) (results string) {
+func (s *ShakespeareDataRec) Search(query string) (resultsToFront ResultsToFront) {
 
-	var hits []ResultRec
+	var (
+		hits    []ResultRec
+		results string
+	)
+
 	queryWords := getWordsSlice(query)
 
 	for i := range s.ShakespeareLine {
@@ -140,11 +149,18 @@ func (s *ShakespeareDataRec) Search(query string) (results string) {
 			// results += hit.FormatHTML(hit)
 		}
 	}
+
 	sortResults(hits)
+
 	for _, v := range hits {
 		results += v.FormatHTML(v)
 	}
-	return results
+	resultsToFront = ResultsToFront{
+		HTML:       results,
+		NumResults: len(hits),
+	}
+	fmt.Println(resultsToFront)
+	return resultsToFront
 }
 
 func getWordsSlice(s string) (wordSlice []string) {
@@ -185,7 +201,7 @@ func sortResults(hits []ResultRec) {
 	sort.Slice(hits, less)
 }
 
-// SimpleSearch main search function
+// SearchSimple simple string match function
 func (s *ShakespeareDataRec) SearchSimple(query string) string {
 
 	var results string
