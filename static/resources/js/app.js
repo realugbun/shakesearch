@@ -6,7 +6,7 @@ const Controller = {
     const data = Object.fromEntries(new FormData(form));
     const response = fetch(`/search?q=${data.query}`).then((response) => {
       response.json().then((results) => {
-        Controller.displayResults(results.HTML, results.NumResults);
+        Controller.displayResults(results.HTML, results.numResults);
         
       });
     });
@@ -18,7 +18,8 @@ const Controller = {
     const resultsContainer = document.querySelector(".results-container");
     resultsBody.innerHTML = HTML;
     resultsHeader.innerHTML = `<h1>${numResults} Results found!</h1>`
-    resultsContainer.classList.remove("hidden") 
+    resultsContainer.classList.remove("hidden");
+    window.location = './#results-header'; 
   },
 };
 

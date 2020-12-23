@@ -1,62 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ShakeSearch</title>
+    <meta name="theme-color" content="#fafafa" />
 
-<head>
-  <meta charset="utf-8">
-  <title>ShakeSearch</title>
-  <meta name="theme-color" content="#fafafa">
-  
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,300&display=swap">
-  <link rel="stylesheet" type="text/css" href="vendors/css/grid.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css">
-  <link rel="stylesheet" href="resources/css/style.css">
-</head>
-<body>
-  <header>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,300&display=swap"
+    />
+    <link rel="stylesheet" type="text/css" href="vendors/css/grid.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css"
+    />
+    <link rel="stylesheet" href="resources/css/style.css" />
+  </head>
+  <body>
+    <header class="heading">
       <div class="hero-text-box">
-          <h1 class="heading-primary">Search Shakespeare. Fast.</h1>
-          <form id="form" class="heading-form">
-              <input type="text" id="query" name="query">
-              <button class="btn btn-full" type="submit">Search</button>
-          </form>
-      </div> 
-  </header>
-
-<section class="results-section">
-  <figure class="results-container hidden">
-    <figure id="results-header">  
-      <h1 >Press search to get results</h1>
-    </figure>
-    <figure id="results-body">
-
-    </figure>
-  </figure>
-</section>
-
-  <footer>
-      <div class="row">
-          <div class="col span-1-of-3">
-              <ul class="footer-nav">
-                  <li><a href="https://pulley.com/">About Pulley</a></li>
-                  <li><a href="https://pulley.com/terms">Terms</a></li>
-                  <li><a href="https://pulley.com/privacy">Privacy</a></li>
-                  <li><a href="https://pulley.helpscoutdocs.com/">Help & Support</a></li>
-              </ul>
-          </div>
-          <div class="col span-1-of-3">
-            <p>Copyright &copy; 2020 Jackson Atkins. All rights reserved. Made for Pulley.</p>
-          </div>
-          <div class="col span-1-of-3">
-              <ul class="social-links">
-                  <li><a href="#"><i class="ion-social-facebook"></i></a></li>
-                  <li><a href="#"><i class="ion-social-twitter"></i></a></li>
-                  <li><a href="#"><i class="ion-social-instagram"></i></a></li>
-              </ul>
-          </div>
+        <h1 class="heading-primary">Search Shakespeare. Fast.</h1>
+        <form id="form" class="heading-form">
+          <input type="text" id="query" name="query"/>
+          <button class="btn btn-full" type="submit">Search</button>
+        </form>
       </div>
-  </footer>
+    </header>
 
-  <script src="resources/js/app.js"></script>
-</body>
+    <section class="results-section">
+      <figure class="results-container hidden">
+        <figure id="results-header">
+          <h1>Press search to get results</h1>
+        </figure>
+        <figure id="results-body"></figure>
+      </figure>
+    </section>
 
+    <footer>
+      <div class="row">
+        <div class="col span-1-of-3">
+          <ul class="footer-nav">
+            <li><a href="https://pulley.com/">About Pulley</a></li>
+            <li><a href="https://pulley.com/terms">Terms</a></li>
+            <li><a href="https://pulley.com/privacy">Privacy</a></li>
+            <li>
+              <a href="https://pulley.helpscoutdocs.com/">Help & Support</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col span-1-of-3">
+          <p>
+            Copyright &copy; 2020 Jackson Atkins. All rights reserved. Made for
+            Pulley.
+          </p>
+        </div>
+        <div class="col span-1-of-3">
+          <ul class="social-links">
+            <li>
+              <a href="#"><i class="ion-social-facebook"></i></a>
+            </li>
+            <li>
+              <a href="#"><i class="ion-social-twitter"></i></a>
+            </li>
+            <li>
+              <a href="#"><i class="ion-social-instagram"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="resources/js/app.js"></script>
+  </body>
 </html>

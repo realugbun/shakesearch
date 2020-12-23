@@ -4,16 +4,19 @@
 
 * {
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 html,
 body {
-  font-family: 'Lato', 'Arial',sans-serif;
+  font-family: "Lato", "Arial", sans-serif;
   font-size: 20px;
   font-weight: 300;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .hidden {
@@ -48,10 +51,19 @@ h1 {
   outline: none;
 }
 
+button {
+  background-color: #cf6d17;
+  border: 2px solid #cf6d17;
+  color: rgb(240, 240, 240);
+  border-radius: 100px;
+  padding: 2px 7px;
+  margin-left: 10px;
+  font-size: 100%;
+}
 
 .btn:link,
 .btn:visited,
-input[type=submit] {
+input[type="submit"] {
   display: inline-block;
   padding: 10px 30px;
   font-weight: 300;
@@ -60,20 +72,9 @@ input[type=submit] {
   transition: background-color 0.2s, border 0.2s, color 0.2s;
 }
 
-button {
-  background-color: #cf6d17;
-  border: 1px solid #cf6d17;
-  color: rgb(240, 240, 240);
-  border-radius: 5px;
-  padding: 2px 7px;
-  margin-left: 10px;
-  font-size: 100%;
-}
-
-
 .btn-full:link,
 .btn-full:visited,
-input[type=submit] {
+input[type="submit"] {
   background-color: #cf6d17;
   border: 1px solid #cf6d17;
   color: white;
@@ -82,21 +83,26 @@ input[type=submit] {
 
 .btn-full:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,.3);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn-full:active {
   transform: translateY(-1px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .3);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 input {
   font-size: 115%;
-  background-color: rgba(255, 255, 255, 0.85);
-  border-radius: 5px;
-  border: 1px;
+  background-color: rgba(255, 255, 255, .0);
+  border-radius: 100px;
+  border: 1px solid white;
   margin: 10px 5px 10px 0;
   height: 29px;
+  color: white;
+}
+
+input[type="text"] {
+  padding-left: 13px;
 }
 
 /* ----------------------------------------- */
@@ -105,11 +111,15 @@ input {
 
 header {
   background-image: linear-gradient(#0f3430c2, #0f3430c2),
-  url("img/unsplash-quill.jpeg");
+    url("img/unsplash-quill.jpeg");
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 85vh;
   background-attachment: fixed;
+}
+
+.heading {
+  position: relative;
 }
 
 .heading-primary {
@@ -126,10 +136,10 @@ header {
 
 .hero-text-box {
   position: absolute;
-  width: 1140px;
+  width: 100%;
   top: 30%;
   left: 50%;
-  transform: translate(-50%, 50%);
+  transform: translate(-30%, 30%);
   backface-visibility: hidden;
 }
 
@@ -167,13 +177,13 @@ header {
 /* Results */
 /* ----------------------------------------- */
 .results-section {
- margin-bottom: 0px;
- color: #444;
- padding: 0px;
- background: linear-gradient(to bottom right, #eeeeee, #e6f5ef);
- display: flex;
- align-items: center;
- justify-content: center;
+  margin-bottom: 0px;
+  color: #444;
+  padding: 0px;
+  background: linear-gradient(to bottom right, #eeeeee, #e6f5ef);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .results-section .hidden {
@@ -193,12 +203,11 @@ header {
   max-width: 800px;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 15px 40px 10px rgba(0, 0, 0, .4);
+  box-shadow: 0 15px 40px 10px rgba(0, 0, 0, 0.4);
   margin-bottom: 20px;
   display: flex;
   align-items: stretch;
 }
-
 
 .result__content {
   background-color: white;
@@ -279,6 +288,7 @@ footer {
   background-color: #0f3430;
   padding: 50px;
   font-size: 80%;
+  height: 15vh;
 }
 
 footer p {

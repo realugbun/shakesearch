@@ -43,9 +43,10 @@ type (
 		lineType   string
 		score      int
 	}
+	// ResultsToFront used for JSON object to frontend
 	ResultsToFront struct {
-		HTML       string `json:HTML`
-		NumResults int    `json:numResults`
+		HTML       string `json:"HTML"`
+		NumResults int    `json:"numResults"`
 	}
 )
 
@@ -108,7 +109,6 @@ func handleSearch(data ShakespeareDataRec) func(w http.ResponseWriter, r *http.R
 			return
 		}
 		resultsToFront := data.Search(query[0])
-		fmt.Println(resultsToFront)
 		buf := &bytes.Buffer{}
 		enc := json.NewEncoder(buf)
 		err := enc.Encode(resultsToFront)
@@ -137,7 +137,7 @@ func (s *ShakespeareDataRec) Search(query string) (resultsToFront ResultsToFront
 		if score > 0 {
 			hit := ResultRec{
 				lineBefore: s.ShakespeareLine[i-1].TextEntry,
-				hit:        strings.Replace(s.ShakespeareLine[i].TextEntry, query, fmt.Sprintf("<b>%v</b>", query), -1),
+				hit:        makeBold(s.ShakespeareLine[i].TextEntry, query),
 				lineAfter:  s.ShakespeareLine[i+1].TextEntry,
 				playName:   s.ShakespeareLine[i].PlayName,
 				lineNumber: s.ShakespeareLine[i].LineNumber,
@@ -146,7 +146,6 @@ func (s *ShakespeareDataRec) Search(query string) (resultsToFront ResultsToFront
 				score:      score,
 			}
 			hits = append(hits, hit)
-			// results += hit.FormatHTML(hit)
 		}
 	}
 
@@ -159,7 +158,6 @@ func (s *ShakespeareDataRec) Search(query string) (resultsToFront ResultsToFront
 		HTML:       results,
 		NumResults: len(hits),
 	}
-	fmt.Println(resultsToFront)
 	return resultsToFront
 }
 
@@ -191,6 +189,20 @@ func matchScore(data []string, query []string) (score int) {
 	return score
 }
 
+func makeBold(line string, query string) string {
+	slice := strings.Split(line, " ")
+	for i := range slice {
+		if strings.Contains(
+			strings.ToLower(slice[i]),
+			strings.ToLower(query),
+		) {
+			slice[i] = fmt.Sprintf("<b>%v</b>", slice[i])
+		}
+	}
+
+	return strings.Join(slice, " ")
+}
+
 func sortResults(hits []ResultRec) {
 	var less func(i, j int) bool
 
@@ -199,6 +211,27 @@ func sortResults(hits []ResultRec) {
 	}
 
 	sort.Slice(hits, less)
+}
+
+// FormatHTML formats the data in the needed HTML
+func (r *ResultRec) FormatHTML(hit ResultRec) string {
+	text := fmt.Sprintf("%v %v %v", r.lineBefore, r.hit, r.lineAfter)
+	formatedResult := fmt.Sprintf(`<figure class="result">
+        <div class="result__content">
+            <div class="result__title">
+                <h2 class="result__heading">%v %v</h2>
+                <div class="result__tag result__tag--1">#%v</div>
+				<div class="result__tag result__tag--2">#%v</div>
+            </div>
+            <p class="result__description">%v</p>
+        </div>
+        <div class="result__work">
+        	RANK %v
+        </div>
+	</figure>`, r.playName, r.lineNumber, r.lineType, r.speaker, text, r.score)
+
+	return formatedResult
+
 }
 
 // SearchSimple simple string match function
@@ -225,25 +258,4 @@ func (s *ShakespeareDataRec) SearchSimple(query string) string {
 	}
 
 	return results
-}
-
-// FormatHTML formats the data in the needed HTML
-func (r *ResultRec) FormatHTML(hit ResultRec) string {
-	text := fmt.Sprintf("%v %v %v", r.lineBefore, r.hit, r.lineAfter)
-	formatedResult := fmt.Sprintf(`<figure class="result">
-        <div class="result__content">
-            <div class="result__title">
-                <h2 class="result__heading">%v %v</h2>
-                <div class="result__tag result__tag--1">#%v</div>
-				<div class="result__tag result__tag--2">#%v</div>
-            </div>
-            <p class="result__description">%v</p>
-        </div>
-        <div class="result__work">
-        	RANK %v
-        </div>
-	</figure>`, r.playName, r.lineNumber, r.lineType, r.speaker, text, r.score)
-
-	return formatedResult
-
 }
